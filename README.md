@@ -18,3 +18,12 @@
     "accountType": "individual"
 }
 ```
+
+2) Login - http://localhost:5001/api/login
+   
+``` json
+{
+  "username": "rohit",
+  "password": "124"
+}
+```
