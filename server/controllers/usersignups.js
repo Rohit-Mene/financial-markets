@@ -1,8 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
-//Access custom env variables from server/config/custom-environment-variables.json
-const config = require("config");
 /**
  * https://jwt.io/libraries?language=Node.js
  */
@@ -36,10 +34,9 @@ const getSignup = async (req, res) => {
       createdAt: new Date(),
     });
     user = await user.save();
-    //let userDetRes = _.pick(user, ["_id", "username"]);
-    //console.log(process.env.PRIVATE_KEY);
-    const token = jwt.sign({ _id: user._id }, config.get("PRIVATE_KEY"));
-    res.status(201).send({ _id: user._id, username: user.username, token });
+
+    const token = user.generateAuthToken();
+    res.header('x-auth-token',token).status(201).send({ _id: user._id, username: user.username});
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: "Signup Failed" });
