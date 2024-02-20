@@ -35,12 +35,35 @@ const getSignup = async (req, res) => {
     });
     user = await user.save();
 
-    const token = user.generateAuthToken();
-    res.header('x-auth-token',token).status(201).send({ _id: user._id, username: user.username});
+    res.status(201).send({ _id: user._id, username: user.username });
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: "Signup Failed" });
   }
 };
 
-module.exports = { getSignup };
+const getLogin = async (req, res) => {
+  try {
+    let user = await User.findOne({ username: req.body.username });
+
+    if (!user) return res.status(401).send("Invalid User");
+
+    const checkPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    console.log(checkPassword);
+    if (!checkPassword)
+      return res.status(401).send("Username or Password is wrong");
+    const token = user.generateAuthToken();
+    res
+      .cookie("auth-token", token, { httpOnly: true })
+      .status(200)
+      .send({ _id: user._id, username: user.username });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: "Signup Failed" });
+  }
+};
+
+module.exports = { getSignup, getLogin };
