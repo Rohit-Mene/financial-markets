@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const config = require("config");
 const usersignups = require("./routes/usersignups");
+const stockdetails = require("./routes/stockdetails");
 /**
  * MONGOOSE DATABASE CONNECTION
  */
@@ -40,3 +41,4 @@ app.use(cors());
  */
 
 app.use("/api", usersignups);
+app.use("/api/stocks", stockdetails)

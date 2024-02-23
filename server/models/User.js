@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 //Access custom env variables from server/config/custom-environment-variables.json
 const config = require("config");
+
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,

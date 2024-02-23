@@ -1,3 +1,5 @@
 {
-    "PRIVATE_KEY":"DUMMY"
+    "PRIVATE_KEY":"DUMMY",
+    "VANTAGE_API_BASE": "https://www.alphavantage.co/query?",
+    "API_KEY":"demo"
 }
