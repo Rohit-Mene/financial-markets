@@ -21,10 +21,10 @@ const getInitStocks = async (req, res) => {
     const responseData = stockList.map((response) =>
       filteredResponse(response.data)
     );
-    
+
     res.status(200).send(responseData);
   } catch (error) {
-    console.log("Inital Stock fetch failed", error);
+    console.log("Initial Stock fetch failed", error);
   }
 };
 

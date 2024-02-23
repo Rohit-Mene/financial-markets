@@ -7,6 +7,7 @@ const cors = require("cors");
 const config = require("config");
 const usersignups = require("./routes/usersignups");
 const stockdetails = require("./routes/stockdetails");
+
 /**
  * MONGOOSE DATABASE CONNECTION
  */
