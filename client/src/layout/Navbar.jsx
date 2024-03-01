@@ -12,32 +12,51 @@ import {
 } from "@mui/material/";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link as RouterLink } from "react-router-dom";
+import axios from "axios";
 
-const fetchHeaderData = async (headerName) => {
-  // Simulating a fetch call to your backend
-  // Example: const response = await fetch(`/api/${headerName}`);
-  // return await response.json();
-  return `Dynamic ${headerName}`;
-};
 
 const Navbar = ({ isNonMobile }) => {
   const [mobileMenuAnchorEl, setMobileMenuAnchorEl] = useState(null);
-  const [header1Data, setHeader1Data] = useState("");
-  const [header2Data, setHeader2Data] = useState("");
+  const [marketStatus, setMarketStatus] = useState({
+    India: "Fetching...",
+    "United States": "Fetching...",
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data1 = await fetchHeaderData("header1");
-      const data2 = await fetchHeaderData("header2");
-      setHeader1Data(data1);
-      setHeader2Data(data2);
+    const fetchMarketStatus = async () => {
+      try {
+        const response = await axios.get(
+          "https://www.alphavantage.co/query?function=MARKET_STATUS&apikey=demo"
+        );
+        const markets = response.data.markets;
+        const indiaMarket = markets.find((market) => market.region === "India");
+        const usMarket = markets.find(
+          (market) => market.region === "United States"
+        );
+
+        setMarketStatus({
+          India: indiaMarket ? indiaMarket.current_status : "Not Available",
+          "United States": usMarket ? usMarket.current_status : "Not Available",
+        });
+      } catch (error) {
+        console.error("Failed to fetch market status", error);
+        setMarketStatus({
+          India: "Error",
+          "United States": "Error",
+        });
+      }
     };
 
-    fetchData();
+    fetchMarketStatus();
   }, []);
+
   const navbarHeaders = [
-    { name: header1Data || "Header 1", isButton: false, link: "/" },
-    { name: header2Data || "Header 2", isButton: false, link: "/" },
+    { name: `India Market: ${marketStatus.India}`, isButton: false, link: "/" },
+    {
+      name: `US Market: ${marketStatus["United States"]}`,
+      isButton: false,
+      link: "/",
+    },
     { name: "Dashboard", isButton: true, link: "/dashboard" },
     { name: "Orders", isButton: true, link: "/orders" },
     { name: "Holdings", isButton: true, link: "/holdings" },
@@ -84,33 +103,35 @@ const Navbar = ({ isNonMobile }) => {
   );
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {!isNonMobile && (
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={handleMobileMenuToggle}
+    <Box>
+      <AppBar position="static">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            {!isNonMobile && (
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2 }}
+                onClick={handleMobileMenuToggle}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: "flex",
+                justifyContent: isNonMobile ? "space-evenly" : "flex-end",
+              }}
             >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: "flex",
-              justifyContent: isNonMobile ? "space-evenly" : "flex-end",
-            }}
-          >
-            {isNonMobile ? navbarHeaders.map(renderLinkItem) : null}
-          </Box>
-          {!isNonMobile && renderMobileMenu}
-        </Toolbar>
-      </Container>
-    </AppBar>
+              {isNonMobile ? navbarHeaders.map(renderLinkItem) : null}
+            </Box>
+            {!isNonMobile && renderMobileMenu}
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </Box>
   );
 };
 
