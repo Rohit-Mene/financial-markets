@@ -11,7 +11,8 @@ import {
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Link as RouterLink } from "react-router-dom";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // Define a validation schema using Yup for the Login form
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required("Required"),
@@ -19,6 +20,28 @@ const LoginSchema = Yup.object().shape({
 });
 
 const Login = () => {
+  const navigate = useNavigate();
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      // Replace URL with your actual login API endpoint
+      const response = await axios.post(
+        "http://localhost:5001/api/login",
+        values,
+        { withCredentials: true }
+      );
+      // You can redirect the user to another page or update the app state here
+      if (response.status === 200) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error(
+        "Login failed:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <Box
       sx={{
@@ -39,10 +62,7 @@ const Login = () => {
             password: "",
           }}
           validationSchema={LoginSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log("Login submitted:", values);
-            setSubmitting(false); // Normally, here you'd handle the login logic
-          }}
+          onSubmit={handleSubmit}
         >
           {({ errors, touched, isSubmitting }) => (
             <Form noValidate>

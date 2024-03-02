@@ -9,7 +9,8 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // Define a validation schema using Yup
 const SignupSchema = Yup.object().shape({
   username: Yup.string().required("Required"),
@@ -21,6 +22,27 @@ const SignupSchema = Yup.object().shape({
 });
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      // Replace URL with your actual login API endpoint
+      const response = await axios.post(
+        "http://localhost:5001/api/signup",
+        values,
+        { withCredentials: true }
+      );
+      if (response.status === 201) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error(
+        "Signup failed:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <Box
       sx={{
@@ -45,11 +67,7 @@ const Signup = () => {
             address: "",
           }}
           validationSchema={SignupSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            // Handle form submission, e.g., send to server
-            setSubmitting(false); // Set submitting to false to finish the process
-          }}
+          onSubmit={handleSubmit}
         >
           {({ errors, touched, isSubmitting }) => (
             <Form noValidate>
@@ -58,7 +76,6 @@ const Signup = () => {
                   <Grid item xs={12} key={key}>
                     <Field
                       as={TextField}
-                     
                       fullWidth
                       variant="outlined"
                       label={key.charAt(0).toUpperCase() + key.slice(1)}

@@ -7,11 +7,10 @@ const cors = require("cors");
 const config = require("config");
 const usersignups = require("./routes/usersignups");
 const stockdetails = require("./routes/stockdetails");
-
+const cookieParser = require("cookie-parser");
 /**
  * MONGOOSE DATABASE CONNECTION
  */
-
 
 const PORT = process.env.PORT || 5001;
 
@@ -35,11 +34,11 @@ app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
-
+app.use(cors({ origin: true, credentials: true }));
+app.use(cookieParser());
 /**
  * ROUTES
  */
 
 app.use("/api", usersignups);
-app.use("/api/stocks", stockdetails)
+app.use("/api/stocks", stockdetails);

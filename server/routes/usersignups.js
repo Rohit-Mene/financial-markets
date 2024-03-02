@@ -3,5 +3,5 @@ const router = express.Router();
 const { getSignup,getLogin } = require("../controllers/usersignups.js");
 
 router.post("/signup", getSignup);
-router.get("/login", getLogin);
+router.post("/login", getLogin);
 module.exports = router;

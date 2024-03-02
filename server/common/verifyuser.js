@@ -1,9 +1,8 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) res.status(403).send("No Token");
-  const token = authHeader.split(" ")[1];
+  const token = req.cookies["auth-token"];
+  if (!token) res.status(403).send("No Token");
   try {
     const decoded = jwt.verify(token, config.get("PRIVATE_KEY"));
     req.id = decoded;

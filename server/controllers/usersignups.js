@@ -30,7 +30,8 @@ const getSignup = async (req, res) => {
       contactNumber: req.body.contactNumber,
       fullName: req.body.fullName,
       address: req.body.address,
-      accountType: req.body.accountType,
+      //accountType: req.body.accountType,
+      accountType: "individual",
       createdAt: new Date(),
     });
     user = await user.save();

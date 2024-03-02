@@ -23,7 +23,7 @@
 
 2) Login - http://localhost:5001/api/login
    <br>
-   Type - GET
+   Type - POST
 ``` json
 {
   "username": "rohit",
