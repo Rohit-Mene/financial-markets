@@ -30,10 +30,16 @@ const getInitStocks = async (req, res) => {
 
 function filteredResponse(data) {
   const keysToKeep = ["symbol", "change", "price", "change percent"];
+  const keyRenames = {
+    "change percent": "percentChange", 
+  };
+
   let filteredData = {};
   Object.keys(data["Global Quote"]).forEach((originalKey) => {
-    const processedKey = processKey(originalKey);
+    let processedKey = processKey(originalKey); 
     if (keysToKeep.includes(processedKey)) {
+      
+      processedKey = keyRenames[processedKey] || processedKey;
       filteredData[processedKey] = data["Global Quote"][originalKey];
     }
   });
