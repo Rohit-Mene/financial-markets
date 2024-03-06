@@ -7,6 +7,7 @@ const cors = require("cors");
 const config = require("config");
 const usersignups = require("./routes/usersignups");
 const stockdetails = require("./routes/stockdetails");
+const dashboardportfolio = require("./routes/dashboardportfolio");
 const cookieParser = require("cookie-parser");
 /**
  * MONGOOSE DATABASE CONNECTION
@@ -42,3 +43,4 @@ app.use(cookieParser());
 
 app.use("/api", usersignups);
 app.use("/api/stocks", stockdetails);
+app.use("/api/dashboard", dashboardportfolio);
