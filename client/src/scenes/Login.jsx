@@ -23,15 +23,16 @@ const Login = () => {
   const navigate = useNavigate();
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // Replace URL with your actual login API endpoint
       const response = await axios.post(
         "http://localhost:5001/api/login",
         values,
         { withCredentials: true }
       );
-      // You can redirect the user to another page or update the app state here
+
       if (response.status === 200) {
         navigate("/dashboard");
+        localStorage.setItem("_id", response.data._id);
+        localStorage.setItem("username", response.data.username);
       }
     } catch (error) {
       console.error(

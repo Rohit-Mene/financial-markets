@@ -29,13 +29,12 @@ const getDashboardPortfolio = async (req, res) => {
     await data.save();
 
     let user = await Portfolio.findOne({ userID: userID });
-    res
-      .status(200)
-      .send({
-        _id: user.userID,
-        currentValue: user.currentValue,
-        totalStocks: user.stocks.length,
-      });
+    res.status(200).send({
+      _id: user.userID,
+      currentValue: user.currentValue,
+      investmentAmount: user.investmentAmount,
+      totalStocks: user.stocks.length,
+    });
   } catch (error) {
     console.log("Dashboard portfolio summary failed", error);
   }
