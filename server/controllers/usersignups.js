@@ -58,7 +58,7 @@ const getLogin = async (req, res) => {
       return res.status(401).send("Username or Password is wrong");
     const token = user.generateAuthToken();
     res
-      .cookie("auth-token", token, { httpOnly: true })
+      .cookie("auth-token", token, { httpOnly: true, })
       .status(200)
       .send({ _id: user._id, username: user.username });
   } catch (error) {
@@ -66,5 +66,6 @@ const getLogin = async (req, res) => {
     res.status(404).json({ message: "Signup Failed" });
   }
 };
+
 
 module.exports = { getSignup, getLogin };

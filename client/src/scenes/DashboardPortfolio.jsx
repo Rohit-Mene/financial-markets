@@ -3,7 +3,7 @@ import { Box, Typography, Button, Paper, Divider } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../Context/AuthContext";
 // Utility function for formatting currency
 const formatCurrency = (value) => {
   return `$${value.toLocaleString()}`;
@@ -19,7 +19,7 @@ const formatPercentage = (value) => {
 const DashboardPortfolio = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [portfolioData, setportfolioData] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const {isLoggedIn} = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
     const fetchPortfolioData = async () => {
@@ -32,16 +32,13 @@ const DashboardPortfolio = () => {
           }
         );
         const portfolio = await response.data;
-        //console.log(portfolio);
         setportfolioData(portfolio);
-        // setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch Stock List", error);
         if (
           error.response &&
           (error.response.status === 401 || error.response.status === 403)
         ) {
-          setIsLoggedIn(false);
         }
       } finally {
         setIsLoading(false);
@@ -49,10 +46,11 @@ const DashboardPortfolio = () => {
     };
 
     fetchPortfolioData();
-  }, []);
+  }, [isLoggedIn]);
   if (!isLoggedIn) {
     return (
       <Box sx={{ justifyContent: "center" }}>
+        {console.log("Value in Dashboard Portfolio",isLoggedIn)}
         Not Logged In. Please{" "}
         <Button onClick={() => navigate("/login")}>Login</Button>.
       </Box>
@@ -67,6 +65,7 @@ const DashboardPortfolio = () => {
     (profitLoss / portfolioData?.investmentAmount) * 100;
 
   return (
+    
     <Box
       sx={{
         width: "100%",
@@ -75,6 +74,7 @@ const DashboardPortfolio = () => {
         color: "text.primary",
       }}
     >
+      {console.log("Value in Dashboard Portfolio",isLoggedIn)}
       <Typography variant="h4" gutterBottom>
         Hi, Rohit
       </Typography>

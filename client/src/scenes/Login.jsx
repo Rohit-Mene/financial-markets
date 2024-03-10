@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
 // Define a validation schema using Yup for the Login form
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required("Required"),
@@ -21,6 +22,7 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, login } = useAuth();
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post(
@@ -30,9 +32,10 @@ const Login = () => {
       );
 
       if (response.status === 200) {
-        navigate("/dashboard");
+        login();
         localStorage.setItem("_id", response.data._id);
         localStorage.setItem("username", response.data.username);
+        navigate("/dashboard");
       }
     } catch (error) {
       console.error(
