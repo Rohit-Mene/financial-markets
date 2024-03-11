@@ -13,14 +13,15 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-
-
+import { useAuth } from "../Context/AuthContext";
 const Navbar = ({ isNonMobile }) => {
   const [mobileMenuAnchorEl, setMobileMenuAnchorEl] = useState(null);
   const [marketStatus, setMarketStatus] = useState({
     India: "Fetching...",
     "United States": "Fetching...",
   });
+
+  const { isLoggedIn, logout } = useAuth();
 
   useEffect(() => {
     const fetchMarketStatus = async () => {
@@ -60,7 +61,18 @@ const Navbar = ({ isNonMobile }) => {
     { name: "Dashboard", isButton: true, link: "/dashboard" },
     { name: "Orders", isButton: true, link: "/orders" },
     { name: "Holdings", isButton: true, link: "/holdings" },
-    { name: "Login", isButton: true, link: "/login" },
+    {
+      name: isLoggedIn ? "Logout" : null,
+      isButton: true,
+      link: "/login",
+      action: logout,
+    },
+    {
+      name: !isLoggedIn ? "Login" : null,
+      isButton: true,
+      link: "/login",
+      //action: handleLogin ,
+    },
   ];
 
   const handleMobileMenuToggle = (event) => {
@@ -74,6 +86,7 @@ const Navbar = ({ isNonMobile }) => {
         color="inherit"
         component={RouterLink}
         to={header.link}
+        onClick={header.action || undefined}
       >
         {header.name}
       </Button>
@@ -89,16 +102,18 @@ const Navbar = ({ isNonMobile }) => {
       open={Boolean(mobileMenuAnchorEl)}
       onClose={handleMobileMenuToggle}
     >
-      {navbarHeaders.map((header, index) => (
-        <MenuItem
-          key={index}
-          onClick={handleMobileMenuToggle}
-          component={RouterLink}
-          to={header.link}
-        >
-          {header.name}
-        </MenuItem>
-      ))}
+      {navbarHeaders
+        .filter((obj) => obj.name !== null)
+        .map((header, index) => (
+          <MenuItem
+            key={index}
+            onClick={handleMobileMenuToggle}
+            component={RouterLink}
+            to={header.link}
+          >
+            {header.name}
+          </MenuItem>
+        ))}
     </Menu>
   );
 
