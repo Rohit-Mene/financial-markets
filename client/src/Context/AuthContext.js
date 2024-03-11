@@ -13,10 +13,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.get(
         "http://localhost:5001/api/logout",
-        {},
         { withCredentials: true }
       );
-      setIsLoggedIn(false);
+      setIsLoggedIn(response);
     } catch (error) {
       console.error("Logout failed", error);
     }

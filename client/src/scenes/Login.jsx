@@ -22,7 +22,7 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, login } = useAuth();
+  const {login } = useAuth();
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await axios.post(

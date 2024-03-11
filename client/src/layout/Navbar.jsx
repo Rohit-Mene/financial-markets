@@ -11,22 +11,17 @@ import {
   Typography,
 } from "@mui/material/";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from '../Context/AuthContext';
+import { useAuth } from "../Context/AuthContext";
 const Navbar = ({ isNonMobile }) => {
   const [mobileMenuAnchorEl, setMobileMenuAnchorEl] = useState(null);
   const [marketStatus, setMarketStatus] = useState({
     India: "Fetching...",
     "United States": "Fetching...",
   });
-  //const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate(); 
-  const {isLoggedIn,logout} = useAuth();
 
-  // const onClickHandleLogout = () =>{
-  //   handleLogout();
-  // }
+  const { isLoggedIn, logout } = useAuth();
 
   useEffect(() => {
     const fetchMarketStatus = async () => {
@@ -67,15 +62,15 @@ const Navbar = ({ isNonMobile }) => {
     { name: "Orders", isButton: true, link: "/orders" },
     { name: "Holdings", isButton: true, link: "/holdings" },
     {
-      name: isLoggedIn ? "Logout":null,
+      name: isLoggedIn ? "Logout" : null,
       isButton: true,
-      link:"/login",
+      link: "/login",
       action: logout,
     },
     {
       name: !isLoggedIn ? "Login" : null,
       isButton: true,
-      link:"/login"
+      link: "/login",
       //action: handleLogin ,
     },
   ];
@@ -107,16 +102,18 @@ const Navbar = ({ isNonMobile }) => {
       open={Boolean(mobileMenuAnchorEl)}
       onClose={handleMobileMenuToggle}
     >
-      {navbarHeaders.filter((obj) => obj.name !== null).map((header, index) => (
-        <MenuItem
-          key={index}
-          onClick={handleMobileMenuToggle}
-          component={RouterLink}
-          to={header.link}
-        >
-          {header.name}
-        </MenuItem>
-      ))}
+      {navbarHeaders
+        .filter((obj) => obj.name !== null)
+        .map((header, index) => (
+          <MenuItem
+            key={index}
+            onClick={handleMobileMenuToggle}
+            component={RouterLink}
+            to={header.link}
+          >
+            {header.name}
+          </MenuItem>
+        ))}
     </Menu>
   );
 

@@ -53,7 +53,6 @@ const getLogin = async (req, res) => {
       req.body.password,
       user.password
     );
-    console.log(checkPassword);
     if (!checkPassword)
       return res.status(401).send("Username or Password is wrong");
     const token = user.generateAuthToken();
