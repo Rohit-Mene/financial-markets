@@ -1,4 +1,3 @@
-// AuthContext.js
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
 const AuthContext = createContext();
@@ -15,7 +14,8 @@ export const AuthProvider = ({ children }) => {
         "http://localhost:5001/api/logout",
         { withCredentials: true }
       );
-      setIsLoggedIn(response);
+      setIsLoggedIn(response.data.isLoggedIn);
+      localStorage.clear();
     } catch (error) {
       console.error("Logout failed", error);
     }

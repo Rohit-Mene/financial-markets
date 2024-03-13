@@ -71,7 +71,6 @@ const Navbar = ({ isNonMobile }) => {
       name: !isLoggedIn ? "Login" : null,
       isButton: true,
       link: "/login",
-      //action: handleLogin ,
     },
   ];
 
@@ -81,15 +80,17 @@ const Navbar = ({ isNonMobile }) => {
 
   const renderLinkItem = (header, index) =>
     header.isButton ? (
-      <Button
-        key={index}
-        color="inherit"
-        component={RouterLink}
-        to={header.link}
-        onClick={header.action || undefined}
-      >
-        {header.name}
-      </Button>
+      header.name ? (
+        <Button
+          key={index}
+          color="inherit"
+          component={RouterLink}
+          to={header.link}
+          onClick={header.action || undefined}
+        >
+          {header.name}
+        </Button>
+      ) : null
     ) : (
       <Typography key={index} sx={{ margin: 1, color: "white" }}>
         {header.name}
