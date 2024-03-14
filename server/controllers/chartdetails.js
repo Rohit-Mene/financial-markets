@@ -15,7 +15,7 @@ const filteredData = (stockData) => {
       {
         data: Object.entries(stockData["Time Series (Daily)"]).map(
           ([date, values]) => ({
-            x: convertToDateObject(date),
+            x: date,
             y: [
               parseFloat(values["1. open"]),
               parseFloat(values["2. high"]),
