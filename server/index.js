@@ -8,6 +8,7 @@ const config = require("config");
 const usersignups = require("./routes/usersignups");
 const stockdetails = require("./routes/stockdetails");
 const dashboardportfolio = require("./routes/dashboardportfolio");
+const transactions = require("./routes/transactions");
 const verifyToken = require("./routes/verifyauth");
 const userlogout = require("./routes/logout");
 const cookieParser = require("cookie-parser");
@@ -47,5 +48,6 @@ app.use("/api", usersignups);
 app.use("/api/stocks", stockdetails);
 app.use("/api/dashboard", dashboardportfolio);
 //Still working on the below
-app.use("/api/auth",verifyToken)
+app.use("/api/auth", verifyToken);
 app.use("/api", userlogout);
+app.use("/api", transactions);
