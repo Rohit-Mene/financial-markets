@@ -50,4 +50,4 @@ app.use("/api/dashboard", dashboardportfolio);
 //Still working on the below
 app.use("/api/auth", verifyToken);
 app.use("/api", userlogout);
-app.use("/api", transactions);
+app.use("/transactions", transactions);
