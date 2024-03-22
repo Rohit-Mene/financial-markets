@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { postTransaction } = require("../controllers/transactions.js");
+const verifyToken = require("../common/verifyuser");
+const { postTransaction,getTransaction } = require("../controllers/transactions.js");
+
+router.use(verifyToken);
 
 router.post("/save", postTransaction);
+router.get("/get", getTransaction);
 
 module.exports = router;

@@ -5,6 +5,7 @@ import Login from "../scenes/Login";
 import Dashboard from "../scenes/Dashboard";
 import { Route, Routes, Navigate } from "react-router-dom";
 import ChartRend from "./Chart";
+import Orders from "./Orders";
 
 const Root = () => {
   return (
@@ -16,6 +17,7 @@ const Root = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/chart" element={<ChartRend />} />
+          <Route path="/orders" element={<Orders />} />
         </Route>
       </Routes>
     </>

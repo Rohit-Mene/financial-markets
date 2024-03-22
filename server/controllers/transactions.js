@@ -19,4 +19,14 @@ const postTransaction = async (req, res) => {
   }
 };
 
-module.exports = { postTransaction };
+const getTransaction = async (req, res) => {
+  try {
+    const validUserID = req.query._id;
+    const transactions = await Transaction.find({ userID: validUserID });
+    res.status(200).send(transactions);
+  } catch (error) {
+    console.log("Transaction fetch Failed", error);
+  }
+};
+
+module.exports = {postTransaction, getTransaction };
