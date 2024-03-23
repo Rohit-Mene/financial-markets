@@ -6,6 +6,7 @@ import Dashboard from "../scenes/Dashboard";
 import { Route, Routes, Navigate } from "react-router-dom";
 import ChartRend from "./Chart";
 import Orders from "./Orders";
+import StockTransactionCard from "../layout/StockCard";
 
 const Root = () => {
   return (
@@ -18,6 +19,7 @@ const Root = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/chart" element={<ChartRend />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/stockbuy" element={<StockTransactionCard/>} />
         </Route>
       </Routes>
     </>

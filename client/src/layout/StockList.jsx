@@ -13,13 +13,17 @@ import {
   InputAdornment,
   TablePagination,
   useMediaQuery,
+  Popover,
+  Button,
+  Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // Mock data
 const initialStockData = [
-  { name: "AAPL", change: "+1.15", percentChange: "+0.95%", price: "121.00" },
-  { name: "MSFT", change: "-0.85", percentChange: "-0.65%", price: "210.25" },
+  { symbol: "AAPL", change: "+1.15", percentChange: "+0.95%", price: "121.00" },
+  { symbol: "MSFT", change: "-0.85", percentChange: "-0.65%", price: "210.25" },
 ];
 
 const SearchAndTable = () => {
@@ -27,32 +31,33 @@ const SearchAndTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedStock, setSelectedStock] = useState(null);
+  const navigate = useNavigate();
+  const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  const isNonMobile = useMediaQuery("(min-width: 600px)");
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
   useEffect(() => {
+
     const fetchStockList = async () => {
       try {
         const response = await axios.get(
           "http://localhost:5001/api/stocks/init"
         );
-        const stockList = response.data;
-        setStockData(stockList);
+        setStockData(response.data);
       } catch (error) {
-        console.error("Failed to fetch Stock List", error);
+        console.error("Failed to fetch stock list:", error);
       }
     };
 
     fetchStockList();
   }, []);
+
   const handleSearch = async () => {
-    // const searchedData = initialStockData.filter((stock) =>
-    //   stock.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
-    // setStockData(searchedData);
-    // setPage(0);
+    // Implement the search functionality here
   };
 
   const handleChangePage = (event, newPage) => {
@@ -60,9 +65,23 @@ const SearchAndTable = () => {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const handlePopoverClick = (event, stock) => {
+    // If the current stock is already selected, close the popover
+    if (selectedStock && stock.symbol === selectedStock.symbol) {
+      setAnchorEl(null);
+      setSelectedStock(null);
+    } else {
+      // Otherwise, open the popover for the new stock
+      setAnchorEl(event.currentTarget);
+      setSelectedStock(stock);
+    }
+  };
+
+  const open = Boolean(anchorEl);
 
   return (
     <Box
@@ -107,28 +126,31 @@ const SearchAndTable = () => {
                     page * rowsPerPage + rowsPerPage
                   )
                 : stockData
-              ).map((row) => (
-                <TableRow key={row.symbol}>
+              ).map((stock) => (
+                <TableRow
+                  key={stock.symbol}
+                  onClick={(event) => handlePopoverClick(event, stock)}
+                >
                   <TableCell component="th" scope="row">
-                    {row.symbol}
+                    {stock.symbol}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{
-                      color: row.change.startsWith("-") ? "red" : "green",
+                      color: stock.change.startsWith("-") ? "red" : "green",
                     }}
                   >
-                    {row.change}
+                    {stock.change}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{
-                      color: row.change.startsWith("-") ? "red" : "green",
+                      color: stock.change.startsWith("-") ? "red" : "green",
                     }}
                   >
-                    {row.percentChange}
+                    {stock.percentChange}
                   </TableCell>
-                  <TableCell align="right">{row.price}</TableCell>
+                  <TableCell align="right">{stock.price}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -145,6 +167,48 @@ const SearchAndTable = () => {
           sx={{ flexShrink: 0 }}
         />
       </Paper>
+      <Popover
+        id="action-popover"
+        open={open}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <Typography sx={{ p: 1 }}>
+          {/* Displaying the selected stock's name for clarity */}
+          {selectedStock && (
+            <>
+              {/* <div>Actions for {selectedStock.symbol}</div> */}
+              <Button
+                color="primary"
+                onClick={() => console.log("Buying", selectedStock.symbol)}
+              >
+                Buy
+              </Button>
+              <Button
+                color="secondary"
+                onClick={() => console.log("Selling", selectedStock.symbol)}
+              >
+                Sell
+              </Button>
+              <Button
+                onClick={() =>
+                  navigate("/chart")
+                }
+              >
+                Chart
+              </Button>
+            </>
+          )}
+        </Typography>
+      </Popover>
     </Box>
   );
 };
