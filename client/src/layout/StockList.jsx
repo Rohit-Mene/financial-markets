@@ -89,13 +89,13 @@ const SearchAndTable = () => {
 
   const handlePopoverClick = (event, stock) => {
     // If the current stock is already selected, close the popover
-    if (selectedStock && stock.symbol === selectedStock) {
+    if (selectedStock && stock.symbol === selectedStock.symbol) {
       setAnchorEl(null);
       setSelectedStock(null);
     } else {
       // Otherwise, open the popover for the new stock
       setAnchorEl(event.currentTarget);
-      setSelectedStock(stock.symbol);
+      setSelectedStock(stock);
     }
   };
 

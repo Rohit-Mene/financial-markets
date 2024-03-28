@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   TextField,
@@ -9,38 +9,67 @@ import {
   FormLabel,
   MenuItem,
   Select,
-  InputLabel,
   Box,
-  Container // Import Container for better layout management
-} from '@mui/material';
+  Container,
+} from "@mui/material";
+import axios from "axios";
+function StockTransactionCard({ stockSymbol, transactionType,onClose}) {
+  const [quantity, setQuantity] = useState("");
+  const [priceType, setPriceType] = useState("market");
+  const [limitPrice, setLimitPrice] = useState("");
 
-function StockTransactionCard({ stockSymbol, transactionType }) {
-  const [quantity, setQuantity] = useState('');
-  const [priceType, setPriceType] = useState('market');
-  const [limitPrice, setLimitPrice] = useState('');
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    alert(`Transaction Submitted: ${transactionType.toUpperCase()} ${quantity} of ${stockSymbol.toUpperCase()} at ${priceType.toUpperCase()} price`);
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/transactions/save",
+        {
+          _id: localStorage.getItem("_id"),
+          symbol: stockSymbol.symbol,
+          type: transactionType,
+          quantity: quantity,
+          priceAtTransaction: stockSymbol.price,
+          totalValue: Number(quantity) * Number(stockSymbol.price),
+        },
+        { withCredentials: true } 
+      );
+
+      console.log("Response:", response.data);
+      if (response) {
+        alert(
+          `Transaction Submitted: ${transactionType.toUpperCase()} ${quantity} of ${stockSymbol.symbol.toUpperCase()} at ${priceType.toUpperCase()} price at ${
+            stockSymbol.price
+          }`
+        );
+        onClose();
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+    }
   };
 
   return (
-    <Container maxWidth="sm"> {/* Use Container to center and control the width */}
+    <Container maxWidth="sm">
       <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
         minHeight="50vh"
-        flexDirection="column" // Set flexDirection to column for stacking elements vertically
+        flexDirection="column"
       >
-        <FormControl fullWidth component="form" onSubmit={handleSubmit} sx={{ m: 3 }}> {/* Use fullWidth to control form width */}
+        <FormControl
+          fullWidth
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ m: 3 }}
+        >
           <TextField
             label="Stock Symbol"
             variant="outlined"
-            value={stockSymbol}
+            value={stockSymbol.symbol}
             required
             disabled
-            sx={{ mb: 2 }} // Ensure there's margin at the bottom
+            sx={{ mb: 2 }}
           />
           <TextField
             label="Quantity"
@@ -49,41 +78,43 @@ function StockTransactionCard({ stockSymbol, transactionType }) {
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             required
-            sx={{ mb: 2 }} // Ensure there's margin at the bottom
-          />
-          {/* Transaction Type - No changes needed */}
-          <FormLabel component="legend" sx={{ mt: 2 }}>Transaction Type</FormLabel> {/* Add top margin */}
-          <RadioGroup
-            row
-            value={transactionType}
             sx={{ mb: 2 }}
-          >
+          />
+
+          <FormLabel component="legend" sx={{ mt: 2 }}>
+            Transaction Type
+          </FormLabel>
+          <RadioGroup row value={transactionType} sx={{ mb: 2 }}>
             <FormControlLabel value="buy" control={<Radio />} label="Buy" />
             <FormControlLabel value="sell" control={<Radio />} label="Sell" />
           </RadioGroup>
-          <FormLabel id="price-type-label" sx={{ mt: 2 }}>Price Type</FormLabel> {/* Add top margin */}
+          <FormLabel id="price-type-label" sx={{ mt: 2 }}>
+            Price Type
+          </FormLabel>
           <Select
             labelId="price-type-label"
             value={priceType}
             label="Price Type"
             onChange={(e) => setPriceType(e.target.value)}
-            sx={{ mb: 2, width: '100%' }} // Use 100% width for consistency
+            sx={{ mb: 2, width: "100%" }}
           >
             <MenuItem value="market">Market</MenuItem>
             <MenuItem value="limit">Limit</MenuItem>
           </Select>
-          {priceType === 'limit' && (
+          {priceType === "limit" && (
             <TextField
               label="Limit Price"
               type="number"
               variant="outlined"
               value={limitPrice}
               onChange={(e) => setLimitPrice(e.target.value)}
-              required={priceType === 'limit'}
-              sx={{ mb: 2 }} // Ensure there's margin at the bottom
+              required={priceType === "limit"}
+              sx={{ mb: 2 }}
             />
           )}
-          <Button type="submit" variant="contained" sx={{ mt: 2 }}>Submit Order</Button> {/* Add top margin for spacing */}
+          <Button type="submit" variant="contained" sx={{ mt: 2 }}>
+            Submit Order
+          </Button>
         </FormControl>
       </Box>
     </Container>

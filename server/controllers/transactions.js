@@ -2,7 +2,6 @@ const Transaction = require("../models/Transactions");
 const mongoose = require("mongoose");
 const postTransaction = async (req, res) => {
   try {
-    console.log(req.body.totalValue);
     const currentTransaction = new Transaction({
       userID: req.body._id,
       symbol: req.body.symbol,
@@ -13,7 +12,7 @@ const postTransaction = async (req, res) => {
       transactionDate: Date.now(),
     });
     const savedResponse = currentTransaction.save();
-    res.send(savedResponse);
+    res.status(201).send(savedResponse);
   } catch (error) {
     console.log("Transaction Failed", error);
   }
