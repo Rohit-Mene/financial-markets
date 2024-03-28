@@ -11,6 +11,7 @@ function StockTransactionCard() {
   const handleSubmit = (event) => {
     event.preventDefault();
     alert(`Transaction Submitted: ${transactionType.toUpperCase()} ${quantity} of ${stockSymbol.toUpperCase()} at ${priceType.toUpperCase()} price`);
+    onClose();
   };
 
   return (

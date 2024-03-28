@@ -20,6 +20,9 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "@mui/material";
+import StockTransactionCard from "./StockCard"; // Adjust the import path as necessary
+import { useAuth } from "../Context/AuthContext";
 // Mock data
 const initialStockData = [
   { symbol: "AAPL", change: "+1.15", percentChange: "+0.95%", price: "121.00" },
@@ -35,13 +38,26 @@ const SearchAndTable = () => {
   const [selectedStock, setSelectedStock] = useState(null);
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [transactionType, setTransactionType] = useState("buy");
+  const { isLoggedIn } = useAuth();
+  const handleOpenModal = (stockSymbol, type) => {
+    setSelectedStock(stockSymbol); // Assuming you have a state for this
+    setTransactionType(type);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedStock(null); // Optional: Clear selection on close
+    setTransactionType("");
+  };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
   useEffect(() => {
-
     const fetchStockList = async () => {
       try {
         const response = await axios.get(
@@ -187,28 +203,45 @@ const SearchAndTable = () => {
             <>
               {/* <div>Actions for {selectedStock.symbol}</div> */}
               <Button
+                disabled={!isLoggedIn}
                 color="primary"
-                onClick={() => console.log("Buying", selectedStock.symbol)}
+                onClick={() => handleOpenModal(selectedStock.symbol, "buy")}
               >
                 Buy
               </Button>
               <Button
+                disabled={!isLoggedIn}
                 color="secondary"
-                onClick={() => console.log("Selling", selectedStock.symbol)}
+                onClick={() => handleOpenModal(selectedStock.symbol, "sell")}
               >
                 Sell
               </Button>
-              <Button
-                onClick={() =>
-                  navigate("/chart")
-                }
-              >
-                Chart
-              </Button>
+              <Button onClick={() => navigate("/chart")}>Chart</Button>
             </>
           )}
         </Typography>
       </Popover>
+      <Modal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="transaction-modal-title"
+        aria-describedby="transaction-modal-description"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box sx={{ backgroundColor: "background.paper", p: 4 }}>
+          {selectedStock && (
+            <StockTransactionCard
+              stockSymbol={selectedStock.symbol}
+              transactionType={transactionType}
+              onClose={handleCloseModal}
+            />
+          )}
+        </Box>
+      </Modal>
     </Box>
   );
 };
