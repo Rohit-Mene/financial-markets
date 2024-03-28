@@ -35,21 +35,23 @@ const SearchAndTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedStock, setSelectedStock] = useState(null);
   const navigate = useNavigate();
+
+  const [selectedStock, setSelectedStock] = useState(null);
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [modalOpen, setModalOpen] = useState(false);
   const [transactionType, setTransactionType] = useState("buy");
   const { isLoggedIn } = useAuth();
+
   const handleOpenModal = (stockSymbol, type) => {
-    setSelectedStock(stockSymbol); // Assuming you have a state for this
+    setSelectedStock(stockSymbol); 
     setTransactionType(type);
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
-    setSelectedStock(null); // Optional: Clear selection on close
+    setSelectedStock(null);
     setTransactionType("");
   };
 
@@ -87,13 +89,13 @@ const SearchAndTable = () => {
 
   const handlePopoverClick = (event, stock) => {
     // If the current stock is already selected, close the popover
-    if (selectedStock && stock.symbol === selectedStock.symbol) {
+    if (selectedStock && stock.symbol === selectedStock) {
       setAnchorEl(null);
       setSelectedStock(null);
     } else {
       // Otherwise, open the popover for the new stock
       setAnchorEl(event.currentTarget);
-      setSelectedStock(stock);
+      setSelectedStock(stock.symbol);
     }
   };
 
@@ -205,14 +207,14 @@ const SearchAndTable = () => {
               <Button
                 disabled={!isLoggedIn}
                 color="primary"
-                onClick={() => handleOpenModal(selectedStock.symbol, "buy")}
+                onClick={() => handleOpenModal(selectedStock, "buy")}
               >
                 Buy
               </Button>
               <Button
                 disabled={!isLoggedIn}
                 color="secondary"
-                onClick={() => handleOpenModal(selectedStock.symbol, "sell")}
+                onClick={() => handleOpenModal(selectedStock, "sell")}
               >
                 Sell
               </Button>
@@ -235,7 +237,7 @@ const SearchAndTable = () => {
         <Box sx={{ backgroundColor: "background.paper", p: 4 }}>
           {selectedStock && (
             <StockTransactionCard
-              stockSymbol={selectedStock.symbol}
+              stockSymbol={selectedStock}
               transactionType={transactionType}
               onClose={handleCloseModal}
             />
