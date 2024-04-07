@@ -25,8 +25,8 @@ const getDashboardPortfolio = async (req, res) => {
   try {
     const userID = req.query._id;
     mockPortfolioData.userID = userID;
-    const data = new Portfolio(mockPortfolioData);
-    await data.save();
+    // const data = new Portfolio(mockPortfolioData);
+    // await data.save();
 
     let user = await Portfolio.findOne({ userID: userID });
     res.status(200).send({

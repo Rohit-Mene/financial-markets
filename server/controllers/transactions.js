@@ -71,4 +71,15 @@ const getTransaction = async (req, res) => {
   }
 };
 
-module.exports = { postTransaction, getTransaction };
+const getPortfolio = async (req, res) => {
+  try {
+    const validUserID = req.query._id;
+    const portfolioData = await Portfolio.findOne({ userID: validUserID });
+    const stocks = portfolioData.stocks;
+    res.status(200).send(stocks);
+  } catch (error) {
+    console.log("Transaction fetch Failed", error);
+  }
+};
+
+module.exports = { postTransaction, getTransaction, getPortfolio };
