@@ -4,6 +4,8 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import FundManagementCard from "../layout/FundManagementCard";
+import FundsInfoCard from "../layout/FundsInformationCard";
 // Utility function for formatting currency
 const formatCurrency = (value) => {
   return `$${value.toLocaleString()}`;
@@ -68,6 +70,7 @@ const DashboardPortfolio = () => {
             padding: 4,
             bgcolor: "background.default",
             color: "text.primary",
+  
           }}
         >
           <Typography variant="h4" gutterBottom>
@@ -146,6 +149,19 @@ const DashboardPortfolio = () => {
               </Typography>
             </Box>
           </Box>
+
+          <Divider sx={{ marginY: 2 }} />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <FundManagementCard/>
+            <FundsInfoCard/>
+          </Box>
+
         </Box>
       )}
     </>
