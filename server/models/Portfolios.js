@@ -17,6 +17,7 @@ const PortfolioSchema = new Schema({
   },
   currentValue: { type: Number, required: true },
   investmentAmount: { type: Number, required: true },
+  fundsAmount: { type: Number, required: true},
   stocks: [StockSchema],
 });
 

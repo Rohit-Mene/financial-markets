@@ -81,5 +81,40 @@ const getPortfolio = async (req, res) => {
     console.log("Transaction fetch Failed", error);
   }
 };
+const manageFunds = async (req, res) => {
+  try {
+    const userId = req.query._id;
+    const fundsChange =
+      req.body.type === "add" ? req.body.funds : -req.body.funds;
 
-module.exports = { postTransaction, getTransaction, getPortfolio };
+    const portfolio = await Portfolio.findOne({ userID: userId });
+
+    if (!portfolio) {
+      return res.status(404).send("User portfolio not found.");
+    }
+
+    if (fundsChange < 0 && portfolio.fundsAmount + fundsChange < 0) {
+      return res
+        .status(400)
+        .send("Insufficient funds to complete this operation.");
+    }
+
+    const updatedDocument = await Portfolio.findOneAndUpdate(
+      { userID: userId },
+      { $inc: { fundsAmount: fundsChange } },
+      { new: true }
+    );
+
+    if (updatedDocument) {
+      console.log(updatedDocument);
+      res.status(200).send("Funds updated successfully.");
+    } else {
+      res.status(404).send("Failed to update funds.");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("An error occurred while managing funds.");
+  }
+};
+
+module.exports = { postTransaction, getTransaction, getPortfolio, manageFunds };
