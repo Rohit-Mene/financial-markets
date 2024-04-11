@@ -36,8 +36,7 @@ const FundManagementCard = () => {
       //const portfolio = await response.data;
       if (response.status === 200) {
         alert(
-          `Transaction Submitted
-          }`
+          `Transaction Submitted`
         );
       }
     } catch (error) {

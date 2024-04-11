@@ -6,6 +6,7 @@ const {
   getTransaction,
   getPortfolio,
   manageFunds,
+  getFundDetails
 } = require("../controllers/transactions.js");
 
 //router.use(verifyToken);
@@ -14,4 +15,5 @@ router.post("/save", postTransaction);
 router.get("/get", getTransaction);
 router.get("/getPortfolio", getPortfolio);
 router.put("/manageFunds", manageFunds);
+router.get("/getFundDetails", getFundDetails);
 module.exports = router;

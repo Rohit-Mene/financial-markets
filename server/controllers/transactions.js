@@ -18,7 +18,7 @@ const postTransaction = async (req, res) => {
       transactionDate: Date.now(),
     });
     const savedResponse = currentTransaction.save();
-    const userPortfolio = await Portfolio.findOne({ userID: _id });
+    let userPortfolio = await Portfolio.findOne({ userID: _id });
     if (!userPortfolio) {
       return res.status(404).send("Portfolio not found.");
     }
@@ -53,7 +53,7 @@ const postTransaction = async (req, res) => {
         .status(404)
         .send("Cannot sell stock that is not in portfolio.");
     }
-
+    userPortfolio.fundsAmount -= numTotalValue
     await userPortfolio.save();
     res.status(201).send(savedResponse);
   } catch (error) {
@@ -117,4 +117,26 @@ const manageFunds = async (req, res) => {
   }
 };
 
-module.exports = { postTransaction, getTransaction, getPortfolio, manageFunds };
+const getFundDetails = async (req, res) => {
+  try {
+    const validUserID = req.query._id;
+    const portfolioData = await Portfolio.findOne({ userID: validUserID });
+    const resData = {
+      userID: portfolioData.userID,
+      currentValue: portfolioData.currentValue,
+      investmentAmount: portfolioData.investmentAmount,
+      fundsAmount: portfolioData.fundsAmount,
+    };
+    res.status(200).send(resData);
+  } catch (error) {
+    console.log("Transaction fetch Failed", error);
+  }
+};
+
+module.exports = {
+  postTransaction,
+  getTransaction,
+  getPortfolio,
+  manageFunds,
+  getFundDetails,
+};

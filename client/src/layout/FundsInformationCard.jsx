@@ -1,20 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
-
+import React, { useState, useEffect } from "react";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import CardActions from "@mui/material/CardActions";
+import Button from "@mui/material/Button";
+import axios from "axios";
 const FundsInfoCard = () => {
   const [funds, setFunds] = useState(0);
-  const [lastAdded, setLastAdded] = useState('');
+  const [lastAdded, setLastAdded] = useState("");
 
   // Dummy function to simulate fetching data
-  const fetchFundsInfo = () => {
-    // Simulate an API call to fetch funds info
-    // This is where you would use axios to fetch real data
-    setFunds(5000); // Replace with real data
-    setLastAdded('April 1, 2024'); // Replace with real data
+  const fetchFundsInfo = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/transactions/getFundDetails",
+        {
+          params: { _id: localStorage.getItem("_id") },
+          withCredentials: true,
+        }
+      );
+
+      setFunds(response.data.fundsAmount);
+      setLastAdded("April 1, 2024");
+    } catch (error) {
+      console.error("Failed to fetch Stock List", error);
+      if (
+        error.response &&
+        (error.response.status === 401 || error.response.status === 403)
+      ) {
+      }
+    }
   };
 
   useEffect(() => {
@@ -22,7 +37,7 @@ const FundsInfoCard = () => {
   }, []);
 
   return (
-    <Card sx={{width: '500px', height:'350px', padding: 2, margin:'20px'}}>
+    <Card sx={{ width: "500px", height: "350px", padding: 2, margin: "20px" }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Funds Available
@@ -34,8 +49,8 @@ const FundsInfoCard = () => {
           Last Added: {lastAdded}
         </Typography>
       </CardContent>
-      <CardActions style={{ justifyContent: 'center' }}>
-        <Button size="small">View More</Button>
+      <CardActions style={{ justifyContent: "center" }}>
+        <Button size="small" onClick={fetchFundsInfo}>Refresh</Button>
       </CardActions>
     </Card>
   );
