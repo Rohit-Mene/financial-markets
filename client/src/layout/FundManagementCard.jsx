@@ -33,14 +33,13 @@ const FundManagementCard = () => {
           withCredentials: true,
         }
       );
-      //const portfolio = await response.data;
       if (response.status === 200) {
-        alert(
-          `Transaction Submitted`
-        );
+        alert(`Transaction Submitted`);
       }
     } catch (error) {
-      console.error("Failed to fetch Stock List", error);
+      if (error.response && error.response.status === 400) {
+        alert(`Cannot Remove more than the Balance`);
+      }
       if (
         error.response &&
         (error.response.status === 401 || error.response.status === 403)

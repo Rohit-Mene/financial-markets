@@ -1,5 +1,4 @@
 import React from "react";
-import OrdersTable from "../layout/OrdersTable";
 import SearchAndTable from "../layout/StockList";
 import { Box } from "@mui/material";
 import PortfoliosTable from "../layout/PortfoliosTable";
@@ -22,7 +21,9 @@ const Portfolio = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent:"center"
+          justifyContent:"center",
+          alignItems: "center",
+          flex:1
         }}
       >
         <PortfoliosTable />

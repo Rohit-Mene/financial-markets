@@ -21,7 +21,9 @@ const Orders = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent:"center"
+          justifyContent:"center",
+          alignItems: "center",
+          flex:1
         }}
       >
         <OrdersTable />

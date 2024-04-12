@@ -42,13 +42,12 @@ const PortfoliosTable = () => {
   }, [isLoggedIn]);
 
   const columns = [
-    { field: "symbol", headerName: "Stock Symbol", width: 130 },
-    { field: "quantity", headerName: "Quantity", type: "number", width: 130 },
+    { field: "symbol", headerName: "Stock Symbol",width:230 },
+    { field: "quantity", headerName: "Quantity", type: "number"},
     {
       field: "totalValue",
       headerName: "Total Value",
-      type: "number",
-      width: 130,
+      type: "number",  
     },
   ];
 
@@ -60,7 +59,7 @@ const PortfoliosTable = () => {
           <Button onClick={() => navigate("/login")}>Login</Button>.
         </Box>
       ) : (
-        <div style={{ height: 600, width: "95%" }}>
+        <div style={{ height: 600}}>
           {isLoading ? <Box>Loading...</Box> : null}
           <DataGrid
             rows={transactionsData}

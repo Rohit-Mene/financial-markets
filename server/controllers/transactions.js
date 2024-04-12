@@ -53,7 +53,12 @@ const postTransaction = async (req, res) => {
         .status(404)
         .send("Cannot sell stock that is not in portfolio.");
     }
-    userPortfolio.fundsAmount -= numTotalValue
+    if (type === "buy") {
+      userPortfolio.fundsAmount -= numTotalValue;
+    } else {
+      userPortfolio.fundsAmount += numTotalValue;
+    }
+
     await userPortfolio.save();
     res.status(201).send(savedResponse);
   } catch (error) {
