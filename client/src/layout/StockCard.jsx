@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 function StockTransactionCard({ stockSymbol, transactionType,onClose}) {
-  const [quantity, setQuantity] = useState("");
+  const [quantity, setQuantity] = useState(0);
   const [priceType, setPriceType] = useState("market");
   const [limitPrice, setLimitPrice] = useState("");
-
+  const[totalValue,setTotalValue] = useState(0);
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -44,6 +44,11 @@ function StockTransactionCard({ stockSymbol, transactionType,onClose}) {
         onClose();
       }
     } catch (error) {
+      if(error.response.status === 400){
+        alert(
+          `Not enough Funds. Current Funds Available: $${error.response.data.fundsAmount}`
+        )
+      }
       console.error("There was an error!", error);
     }
   };
@@ -76,8 +81,21 @@ function StockTransactionCard({ stockSymbol, transactionType,onClose}) {
             type="number"
             variant="outlined"
             value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
+            onChange={(e) => {
+              setQuantity(e.target.value);
+              setTotalValue(Number(quantity) * Number(stockSymbol.price))
+            }
+            }
             required
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Total Amount"
+            type="number"
+            variant="outlined"
+            value={totalValue}
+            //onChange={(e) => setTotalValue(Number(quantity) * Number(stockSymbol.price))}
+            disabled
             sx={{ mb: 2 }}
           />
 

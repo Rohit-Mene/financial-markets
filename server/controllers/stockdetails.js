@@ -28,17 +28,33 @@ const getInitStocks = async (req, res) => {
   }
 };
 
+const getRequestedStock = async (req, res) => {
+  try {
+    const stockRequest = await axios.get(VANTAGE_API_BASE, {
+      params: {
+        function: "GLOBAL_QUOTE",
+        symbol: req.query.symbol,
+        apikey: API_KEY,
+      },
+    });
+    const responseData = filteredResponse(stockRequest.data);
+
+    res.status(200).send(responseData);
+  } catch (error) {
+    console.log("Initial Stock fetch failed", error);
+  }
+};
+
 function filteredResponse(data) {
   const keysToKeep = ["symbol", "change", "price", "change percent"];
   const keyRenames = {
-    "change percent": "percentChange", 
+    "change percent": "percentChange",
   };
 
   let filteredData = {};
   Object.keys(data["Global Quote"]).forEach((originalKey) => {
-    let processedKey = processKey(originalKey); 
+    let processedKey = processKey(originalKey);
     if (keysToKeep.includes(processedKey)) {
-      
       processedKey = keyRenames[processedKey] || processedKey;
       filteredData[processedKey] = data["Global Quote"][originalKey];
     }
@@ -51,4 +67,4 @@ function processKey(key) {
   return key.replace(/^\d+\.\s/, "");
 }
 
-module.exports = { getInitStocks };
+module.exports = { getInitStocks,getRequestedStock };
