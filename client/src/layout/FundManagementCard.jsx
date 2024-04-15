@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const FundManagementCard = () => {
   const [amount, setAmount] = useState("");
   const [transactionType, setTransactionType] = useState("");
@@ -34,11 +36,11 @@ const FundManagementCard = () => {
         }
       );
       if (response.status === 200) {
-        alert(`Transaction Submitted`);
+        toast.success(`Transaction Complete`);
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        alert(`Cannot Remove more than the Balance`);
+        toast.error(`Cannot Remove more than the Balance`);
       }
       if (
         error.response &&

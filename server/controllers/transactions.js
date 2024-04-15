@@ -23,8 +23,8 @@ const postTransaction = async (req, res) => {
       return res.status(404).send("Portfolio not found.");
     }
     let stockIndex = userPortfolio.stocks.findIndex((s) => s.symbol === symbol);
-    if (numTotalValue > userPortfolio.fundsAmount) {
-      return res.status(400).send({ fundsAmount: userPortfolio.fundsAmount });
+    if (type === "buy" && numTotalValue > userPortfolio.fundsAmount) {
+      return res.status(400).send({ message: `Not enough funds. Funds Available: $${userPortfolio.fundsAmount.toFixed(2)}` });
     }
     if (stockIndex !== -1) {
       let stock = userPortfolio.stocks[stockIndex];
@@ -37,7 +37,7 @@ const postTransaction = async (req, res) => {
         stock.quantity = totalQuantity;
       } else {
         if (stock.quantity < numQuantity) {
-          return res.status(400).send("Cannot sell more shares than you own.");
+          return res.status(400).send({message:"Cannot sell more shares than you own."});
         }
         stock.quantity -= numQuantity;
 
@@ -54,7 +54,7 @@ const postTransaction = async (req, res) => {
     } else {
       return res
         .status(404)
-        .send("Cannot sell stock that is not in portfolio.");
+        .send({message:"Cannot sell stock that is not in portfolio."});
     }
     if (type === "buy") {
       userPortfolio.investmentAmount += numTotalValue;
