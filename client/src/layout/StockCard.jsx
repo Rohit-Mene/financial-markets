@@ -13,7 +13,7 @@ import {
   Container,
 } from "@mui/material";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function StockTransactionCard({ stockSymbol, transactionType, onClose }) {
   const [quantity, setQuantity] = useState(0);
@@ -41,6 +41,7 @@ function StockTransactionCard({ stockSymbol, transactionType, onClose }) {
         // if(!response.data){
         //   toast.success("Transaction complete.")
         // }
+
         toast.success(
           `Transaction Submitted: ${transactionType.toUpperCase()} ${quantity} of ${stockSymbol.symbol.toUpperCase()} at ${priceType.toUpperCase()} price at ${
             stockSymbol.price
@@ -60,17 +61,6 @@ function StockTransactionCard({ stockSymbol, transactionType, onClose }) {
 
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       <Container maxWidth="sm">
         <Box
           display="flex"

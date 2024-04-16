@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const FundManagementCard = () => {
   const [amount, setAmount] = useState("");
@@ -37,6 +37,8 @@ const FundManagementCard = () => {
       );
       if (response.status === 200) {
         toast.success(`Transaction Complete`);
+        setAmount("");
+        setTransactionType("");
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -47,9 +49,6 @@ const FundManagementCard = () => {
         (error.response.status === 401 || error.response.status === 403)
       ) {
       }
-    } finally {
-      setAmount("");
-      setTransactionType("");
     }
   };
   //width: '500px', height:'300px',margin:'20px'
