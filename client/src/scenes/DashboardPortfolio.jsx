@@ -50,10 +50,15 @@ const DashboardPortfolio = () => {
     fetchPortfolioData();
   }, [isLoggedIn]);
 
-  const profitLoss =
-    portfolioData?.currentValue - portfolioData?.investmentAmount;
-  const profitLossPercentage =
-    (profitLoss / portfolioData?.investmentAmount) * 100;
+  const investmentAmount = Number(portfolioData?.investmentAmount);
+  const currentValue = Number(portfolioData?.currentValue);
+
+  const profitLoss = currentValue - investmentAmount;
+
+  let profitLossPercentage = 0;
+  if (investmentAmount !== 0) {
+    profitLossPercentage = (profitLoss / investmentAmount) * 100;
+  }
 
   return (
     <>
@@ -70,7 +75,6 @@ const DashboardPortfolio = () => {
             padding: 4,
             bgcolor: "background.default",
             color: "text.primary",
-  
           }}
         >
           <Typography variant="h4" gutterBottom>
@@ -158,10 +162,9 @@ const DashboardPortfolio = () => {
               justifyContent: "space-between",
             }}
           >
-            <FundManagementCard/>
-            <FundsInfoCard/>
+            <FundManagementCard />
+            <FundsInfoCard />
           </Box>
-
         </Box>
       )}
     </>

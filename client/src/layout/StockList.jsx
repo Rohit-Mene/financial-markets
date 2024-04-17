@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  TextField,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -10,19 +8,19 @@ import {
   TableHead,
   TableRow,
   Paper,
-  InputAdornment,
   TablePagination,
   useMediaQuery,
   Popover,
   Button,
   Typography,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "@mui/material";
 import StockTransactionCard from "./StockCard"; // Adjust the import path as necessary
 import { useAuth } from "../Context/AuthContext";
+import Search from "./Search";
 // Mock data
 const initialStockData = [
   { symbol: "AAPL", change: "+1.15", percentChange: "+0.95%", price: "121.00" },
@@ -31,7 +29,6 @@ const initialStockData = [
 
 const SearchAndTable = () => {
   const [stockData, setStockData] = useState(initialStockData);
-  const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -44,7 +41,7 @@ const SearchAndTable = () => {
   const { isLoggedIn } = useAuth();
 
   const handleOpenModal = (stockSymbol, type) => {
-    setSelectedStock(stockSymbol); 
+    setSelectedStock(stockSymbol);
     setTransactionType(type);
     setModalOpen(true);
   };
@@ -53,10 +50,6 @@ const SearchAndTable = () => {
     setModalOpen(false);
     setSelectedStock(null);
     setTransactionType("");
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
   };
 
   useEffect(() => {
@@ -73,10 +66,6 @@ const SearchAndTable = () => {
 
     fetchStockList();
   }, []);
-
-  const handleSearch = async () => {
-    // Implement the search functionality here
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -104,28 +93,14 @@ const SearchAndTable = () => {
   return (
     <Box
       sx={{
-        display: isNonMobile ? "flex" : "block",
+        // display: isNonMobile ? "flex" : "block",
+        display: "flex",
         flexDirection: "column",
         width: isNonMobile ? "30vw" : "100%",
         height: "calc(100vh - 65px)",
       }}
     >
-      <TextField
-        sx={{ m: 2 }}
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Search eg: AAPL, MSFT"
-        size="small"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={handleSearch}>
-                <SearchIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+      <Search />
       <Paper sx={{ flex: 1, display: "flex", flexDirection: "column", m: 2 }}>
         <TableContainer sx={{ flex: 1 }}>
           <Table stickyHeader aria-label="stock table">
