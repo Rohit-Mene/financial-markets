@@ -98,6 +98,26 @@ const SearchAndTable = () => {
       setSelectedStock(stock);
     }
   };
+  const handleDeleteWatchList = async (selectedStock) => {
+    const updatedData = stockData.filter(
+      (s) => selectedStock.symbol !== s.symbol
+    );
+    setStockData(updatedData);
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/stock/delete/watchlist",
+        {
+          params: {
+            _id: localStorage.getItem("_id"),
+            stock: selectedStock.symbol,
+          },
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.error("Failed to fetch stock list:", error);
+    }
+  };
 
   const open = Boolean(anchorEl);
   const addStock = async (newStock) => {
@@ -222,12 +242,7 @@ const SearchAndTable = () => {
               <Button
                 disabled={!isLoggedIn}
                 color="secondary"
-                onClick={() => {
-                  const updatedData = stockData.filter(
-                    (s) => selectedStock.symbol !== s.symbol
-                  );
-                  setStockData(updatedData);
-                }}
+                onClick={() => handleDeleteWatchList(selectedStock)}
               >
                 Delete
               </Button>

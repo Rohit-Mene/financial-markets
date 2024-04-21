@@ -103,6 +103,19 @@ const getTickerSearch = async (req, res) => {
   return res.status(200).send(tickerData);
 };
 
+const deleteWatchList = async (req, res) => {
+  try {
+    const updatedWatchList = await Portfolio.updateOne(
+      { userID: req.query._id },
+      { $pull: { watchlist: req.query.stock } },
+      { new: true, safe: true, upsert: false }
+    );
+    return res.status(200).send(updatedWatchList);
+  } catch (error) {
+    console.log("Initial Stock fetch failed", error);
+  }
+};
+
 function filterTickerData(data) {
   const filteredSearchedData = data["bestMatches"].map((item) => ({
     symbol: item["1. symbol"],
@@ -141,4 +154,4 @@ function separateWatchlist(watchlist) {
   //console.log(withDummy);
   return { withDummy, withoutDummy };
 }
-module.exports = { addWatchList, getStocks, getTickerSearch };
+module.exports = { addWatchList, getStocks, getTickerSearch,deleteWatchList };
