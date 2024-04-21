@@ -11,6 +11,7 @@ const dashboardportfolio = require("./routes/dashboardportfolio");
 const transactions = require("./routes/transactions");
 const verifyToken = require("./routes/verifyauth");
 const userlogout = require("./routes/logout");
+const stocksearch = require("./routes/stocksearch");
 const cookieParser = require("cookie-parser");
 /**
  * MONGOOSE DATABASE CONNECTION
@@ -51,3 +52,4 @@ app.use("/api/dashboard", dashboardportfolio);
 app.use("/api/auth", verifyToken);
 app.use("/api", userlogout);
 app.use("/transactions", transactions);
+app.use("/stock", stocksearch);

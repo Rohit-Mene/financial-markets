@@ -67,28 +67,4 @@ function processKey(key) {
   return key.replace(/^\d+\.\s/, "");
 }
 
-// Ticker Search
-const getTickerSearch = async (req, res) => {
-  const apiTickerData = await axios.get(VANTAGE_API_BASE, {
-    params: {
-      function: "SYMBOL_SEARCH",
-      keywords: req.query.searchData,
-      apikey: API_KEY,
-    },
-  });
-
-  const tickerData = filterTickerData(apiTickerData.data);
-
-  return res.status(200).send(tickerData);
-};
-
-function filterTickerData(data) {
-  const filteredSearchedData = data["bestMatches"].map((item) => ({
-    symbol: item["1. symbol"],
-    type: item["3. type"],
-  }));
-
-  return filteredSearchedData;
-}
-
-module.exports = { getInitStocks, getRequestedStock, getTickerSearch };
+module.exports = { getInitStocks, getRequestedStock };

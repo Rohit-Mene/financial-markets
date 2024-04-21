@@ -55,17 +55,28 @@ const SearchAndTable = () => {
   useEffect(() => {
     const fetchStockList = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5001/api/stocks/init"
-        );
-        setStockData(response.data);
+        if (isLoggedIn) {
+          const response = await axios.get(
+            "http://localhost:5001/stock/get/stocks/list",
+            {
+              params: { _id: localStorage.getItem("_id") },
+              withCredentials: true,
+            }
+          );
+          setStockData(response.data);
+        } else {
+          const response = await axios.get(
+            "http://localhost:5001/api/stocks/init"
+          );
+          setStockData(response.data);
+        }
       } catch (error) {
         console.error("Failed to fetch stock list:", error);
       }
     };
 
     fetchStockList();
-  }, []);
+  }, [isLoggedIn]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -89,6 +100,20 @@ const SearchAndTable = () => {
   };
 
   const open = Boolean(anchorEl);
+  const addStock = async (newStock) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/stock/add/watchlist",
+        {
+          params: { _id: localStorage.getItem("_id"), stock: newStock },
+          withCredentials: true,
+        }
+      );
+      setStockData([...stockData, response.data]);
+    } catch (error) {
+      console.error("Failed to fetch stock list:", error);
+    }
+  };
 
   return (
     <Box
@@ -100,7 +125,7 @@ const SearchAndTable = () => {
         height: "calc(100vh - 65px)",
       }}
     >
-      <Search />
+      <Search addStockToState={addStock} />
       <Paper sx={{ flex: 1, display: "flex", flexDirection: "column", m: 2 }}>
         <TableContainer sx={{ flex: 1 }}>
           <Table stickyHeader aria-label="stock table">
@@ -194,6 +219,18 @@ const SearchAndTable = () => {
                 Sell
               </Button>
               <Button onClick={() => navigate("/chart")}>Chart</Button>
+              <Button
+                disabled={!isLoggedIn}
+                color="secondary"
+                onClick={() => {
+                  const updatedData = stockData.filter(
+                    (s) => selectedStock.symbol !== s.symbol
+                  );
+                  setStockData(updatedData);
+                }}
+              >
+                Delete
+              </Button>
             </>
           )}
         </Typography>
