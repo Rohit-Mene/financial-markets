@@ -67,7 +67,7 @@ const postTransaction = async (req, res) => {
       userPortfolio.fundsAmount -= numTotalValue;
     } else {
       userPortfolio.fundsAmount += numTotalValue;
-      userPortfolio.investmentAmount += numTotalValue;
+      userPortfolio.investmentAmount -= numTotalValue;
     }
 
     await userPortfolio.save();

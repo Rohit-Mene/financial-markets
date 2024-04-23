@@ -80,6 +80,7 @@ const Signup = () => {
                       variant="outlined"
                       label={key.charAt(0).toUpperCase() + key.slice(1)}
                       name={key}
+                      type={key === "password" ? "password" : "text"}
                       error={errors[key] && touched[key]}
                       helperText={errors[key] && touched[key] && errors[key]}
                     />
